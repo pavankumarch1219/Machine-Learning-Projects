@@ -17,9 +17,9 @@ steps:
 
     WORKDIR /app
 
-    RUN git clone https://github.com/pavankumarch1219/Machine-Learning-Projects.git
+    COPY . .
 
-    WORKDIR /app/Machine-Learning-Projects/BRAIN\ TUMOR\ DETECTION\ [END\ 2\ END]
+    WORKDIR "/app/BRAIN TUMOR DETECTION [END 2 END]"
 
     RUN pip install --upgrade pip
     RUN pip install -r requirements.txt
