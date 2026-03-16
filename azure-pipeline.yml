@@ -1,0 +1,55 @@
+trigger:
+- main
+
+pool:
+  name: agent-agni
+
+steps:
+
+# Step 1 - Create Dockerfile
+- script: |
+    echo "Creating Dockerfile"
+
+    cat <<EOF > Dockerfile
+    FROM python:3.10-slim
+
+    RUN apt-get update && apt-get install -y git build-essential libgl1 libglib2.0-0 gcc wget
+
+    WORKDIR /app
+
+    RUN git clone https://github.com/pavankumarch1219/Machine-Learning-Projects.git
+
+    WORKDIR /app/Machine-Learning-Projects/BRAIN\ TUMOR\ DETECTION\ [END\ 2\ END]
+
+    RUN pip install --upgrade pip
+    RUN pip install -r requirements.txt
+
+    EXPOSE 5000
+
+    CMD ["python","app.py"]
+    EOF
+  displayName: "Create Dockerfile"
+
+# Step 2 - Build Docker Image
+- script: |
+    echo "Building Docker image"
+    docker build -t brain-tumor-app .
+  displayName: "Build Docker Image"
+
+# Step 3 - Remove old container
+- script: |
+    echo "Removing old container"
+    docker rm -f brain-container || true
+  displayName: "Remove Old Container"
+
+# Step 4 - Run container
+- script: |
+    echo "Running container"
+    docker run -d -p 5000:5000 --name brain-container brain-tumor-app
+  displayName: "Run Docker Container"
+
+# Step 5 - Verify container
+- script: |
+    echo "Checking container"
+    docker ps
+  displayName: "Verify Container"
